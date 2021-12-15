@@ -1,0 +1,142 @@
+/*
+Escolha pelo menos três tabelas de seu projeto e as
+crie no Banco de Dados utilizando a ferramenta
+MySQL Workbench. Propositalmente, não defina
+todas as colunas e restrições na criação.
+*/
+
+DROP DATABASE IF EXISTS sigai;
+
+CREATE SCHEMA sigai;
+
+u
+
+CREATE TABLE aluguel_unidade(
+cod_aluguel INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+data_inicial date,
+data_final date,
+valor float(6,2),
+cod_cliente INT,
+cod_unidade INT
+);
+
+CREATE TABLE posse_unidade(
+cod_contrato INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+iptu float(6,2),
+valor_imovel float(6,2),
+cod_cliente INT,
+cod_unidade INT
+);
+/*
+Altere as suas tabelas inserindo as restrições e
+colunas que faltaram na etapa anterior.
+*/
+ALTER TABLE condominio
+ADD endereco VARCHAR(50)
+;
+
+ALTER TABLE bloco
+ADD nome VARCHAR(50)
+;
+
+ALTER TABLE bloco ADD CONSTRAINT fk_classe FOREIGN KEY (cod_classe) REFERENCES classe(cod_classe);
+ALTER TABLE bloco ADD CONSTRAINT fk_cond FOREIGN KEY (cod_cond) REFERENCES condominio(cod_cond);
+
+ALTER TABLE aluguel_unidade ADD CONSTRAINT fk_cliente_aluguel FOREIGN KEY (cod_cliente) REFERENCES cliente(cod_cliente);
+ALTER TABLE aluguel_unidade ADD CONSTRAINT fk_unidade_aluguel FOREIGN KEY (cod_unidade) REFERENCES unidade(cod_uni);
+ALTER TABLE posse_unidade ADD CONSTRAINT fk_cliente_unidade FOREIGN KEY (cod_cliente) REFERENCES cliente(cod_cliente);
+ALTER TABLE posse_unidade ADD CONSTRAINT fk_unidade_unidade FOREIGN KEY (cod_unidade) REFERENCES unidade(cod_uni);
+
+ALTER TABLE bloco ADD CONSTRAINT fk_cod_classe FOREIGN KEY (cod_classe) REFERENCES classe(cod_classe);
+ALTER TABLE bloco ADD CONSTRAINT fk_cod_cond FOREIGN KEY (cod_cond) REFERENCES condominio(cod_cond);
+
+/*
+Elimine uma das três tabelas criadas.
+*/
+#SET FOREIGN_KEY_CHECKS = 0;
+#DROP TABLE IF EXISTS classe;
+#SET FOREIGN_KEY_CHECKS = 1;
+
+/*
+* POPULANDO A TABELA CONDOMINIO
+*/
+
+INSERT INTO condominio (nome, cnpj, endereco) values ("Casa Grande", "000000000000190", "Rua otima viajem, Recife-PE");
+
+/*
+* POPULANDO A TABELA CLASSE
+*/
+
+INSERT INTO classe (descricao) VALUES ("Pobre");
+INSERT INTO classe (descricao) VALUES ("Popular");
+INSERT INTO classe (descricao) VALUES ("Luxo");
+
+/*
+* POPULANDO A TABELA BLOCO
+*/
+
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("A",8,1,1);
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("B",18,2,1);
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("C",9,3,1);
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("D",7,3,1);
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("E",10,2,1);
+INSERT INTO bloco (nome, nr_pavimento, cod_classe, cod_cond) VALUES ("F",10,2,1);
+
+/*
+* POPULANDO A TABELA TIPO
+*/
+
+INSERT INTO tipo (desc_tipo) VALUES ("Presidencial");
+INSERT INTO tipo (desc_tipo) VALUES ("Cobertura");
+INSERT INTO tipo (desc_tipo) VALUES ("Kitnet");
+INSERT INTO tipo (desc_tipo) VALUES ("2-Quartos");
+INSERT INTO tipo (desc_tipo) VALUES ("3-Quartos");
+
+/*
+* POPULANDO A TABELA UNIDADE
+*/
+
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (1,1,250,01);
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (1,2,150,02);
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (2,3,60,01);
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (2,4,60,02);
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (3,4,60,01);
+INSERT INTO unidade (bloco, tipo, tamanho, numero) VALUES (4,5,60,02);
+
+/*
+* POPULANDO A TABELA CLIENTE
+*/
+
+INSERT INTO CLIENTE (nome, cpf) VALUES ("Curumin", "029.884.082-19");
+INSERT INTO CLIENTE (nome, cpf) VALUES ("Caipora", "029.884.082-19");
+INSERT INTO CLIENTE (nome, cpf) VALUES ("Perna Cabeluda", "029.884.082-19");
+
+
+/*
+* REGISTRANDO UM ALUGUEL
+*/
+
+INSERT INTO aluguel_unidade (data_inicial, data_final, valor, cod_cliente, cod_unidade) VALUES (
+"2021/12/12","2023/12/12",1980.00,1,1
+);
+
+INSERT INTO aluguel_unidade (data_inicial, data_final, valor, cod_cliente, cod_unidade) VALUES (
+"2021/12/12","2023/12/12",3980.00,2,2
+);
+
+INSERT INTO aluguel_unidade (data_inicial, data_final, valor, cod_cliente, cod_unidade) VALUES (
+"2021/12/12","2023/12/12",980.00,3,3
+);
+
+INSERT INTO aluguel_unidade (data_inicial, data_final, valor, cod_cliente, cod_unidade) VALUES (
+"2021/12/12","2023/12/12",980.00,1,3
+);
+
+SELECT nome FROM cliente WHERE cod_cliente = 1;
+
+SELECT * FROM cliente WHERE nome LIKE '%c';
+
+SELECT desc_tipo FROM tipo;
+
+SELECT nome FROM cliente INNER JOIN aluguel_unidade ON cliente.cod_cliente = aluguel_unidade.cod_cliente WHERE aluguel_unidade.valor > 1000;
+SELECT nome, valor FROM cliente INNER JOIN aluguel_unidade ON cliente.cod_cliente = aluguel_unidade.cod_cliente WHERE aluguel_unidade.valor > 1000;
