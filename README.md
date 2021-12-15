@@ -1,1 +1,1 @@
-# coursera_introducao_python_01
+# Código do curso de introduçao a Python do Coursera 🐍
